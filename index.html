@@ -1,846 +1,253 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACESSO+ — Onde acessibilidade vira informação, autonomia e inclusão</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome para ícones -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; font-size: var(--base-font-size, 16px); letter-spacing: var(--base-letter-spacing, normal); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Modos de Acessibilidade do Próprio Site */
-        body.high-contrast {
-            background-color: #000000 !important;
-            color: #ffff00 !important;
-        }
-        body.high-contrast * {
-            background-color: #000000 !important;
-            color: #ffff00 !important;
-            border-color: #ffff00 !important;
-        }
-        body.reduce-motion * {
-            transition: none !important;
-            animation: none !important;
-        }
+        body { font-family: 'Inter', sans-serif; font-size: var(--base-font-size, 16px); }
+        .high-contrast { background-color: #000 !important; color: #ff0 !important; }
+        .high-contrast * { background-color: #000 !important; color: #ff0 !important; border-color: #ff0 !important; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased pb-24 md:pb-0 selection:bg-emerald-500 selection:text-white">
+<body class="bg-slate-50 text-slate-800 pb-20 md:pb-0">
 
-    <!-- BOTÃO FLUTUANTE DE ACESSIBILIDADE DO SITE -->
+    <!-- BOTÃO FLUTUANTE DE ACESSIBILIDADE -->
     <div class="fixed bottom-20 md:bottom-6 right-6 z-50">
-        <button onclick="toggleAccessibilityPanel()" class="bg-slate-900 text-white border-2 border-emerald-400 p-3.5 rounded-full shadow-2xl flex items-center gap-2 font-bold hover:scale-105 transition group" aria-label="Abrir painel de acessibilidade">
+        <button onclick="toggleAccessPanel()" class="bg-slate-900 text-white border-2 border-emerald-400 p-3.5 rounded-full shadow-2xl flex items-center gap-2 font-bold hover:scale-105 transition">
             <i class="fa-solid fa-universal-access text-xl text-emerald-400"></i>
-            <span class="hidden group-hover:inline text-sm pr-2">Acessibilidade</span>
         </button>
-
-        <!-- PAINEL DE ACESSIBILIDADE -->
-        <div id="accessibilityPanel" class="hidden absolute bottom-16 right-0 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl p-5 text-slate-800 space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-universal-access text-emerald-600"></i> Painel de Acessibilidade
-                </h3>
-                <button onclick="toggleAccessibilityPanel()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+        <div id="accessPanel" class="hidden absolute bottom-16 right-0 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl p-4 text-slate-800 space-y-3">
+            <div class="flex justify-between items-center border-b pb-2 font-bold">
+                <span>Acessibilidade</span>
+                <button onclick="toggleAccessPanel()"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="space-y-3 text-sm">
-                <button onclick="toggleHighContrast()" class="w-full text-left px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-circle-half-stroke text-emerald-600"></i> 🔲 Alto Contraste
-                </button>
-                <div class="flex items-center justify-between bg-slate-100 px-3 py-2 rounded-lg">
-                    <span class="font-medium flex items-center gap-2"><i class="fa-solid fa-font text-emerald-600"></i> Tamanho da Fonte</span>
-                    <div class="flex gap-1">
-                        <button onclick="adjustFontSize(-1)" class="px-2.5 py-1 bg-white rounded border font-bold">-</button>
-                        <button onclick="adjustFontSize(1)" class="px-2.5 py-1 bg-white rounded border font-bold">+</button>
-                    </div>
-                </div>
-                <button onclick="toggleLetterSpacing()" class="w-full text-left px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-text-width text-emerald-600"></i> ↔️ Espaçamento de Texto
-                </button>
-                <button onclick="toggleReduceMotion()" class="w-full text-left px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 font-medium flex items-center gap-2">
-                    <i class="fa-solid fa-person-running text-emerald-600"></i> ▶️ Reduzir Animações
-                </button>
-                <button onclick="resetAccessibilitySettings()" class="w-full text-center py-1.5 text-xs text-rose-600 font-semibold hover:underline">
-                    Restaurar Padrões
-                </button>
+            <button onclick="document.body.classList.toggle('high-contrast')" class="w-full text-left px-3 py-2 bg-slate-100 rounded-lg font-medium text-sm">🔲 Alto Contraste</button>
+            <div class="flex gap-2">
+                <button onclick="adjustFont(-1)" class="flex-1 py-1.5 bg-slate-100 rounded-lg font-bold text-sm">A-</button>
+                <button onclick="adjustFont(1)" class="flex-1 py-1.5 bg-slate-100 rounded-lg font-bold text-sm">A+</button>
             </div>
         </div>
     </div>
 
-    <!-- HEADER / NAVEGAÇÃO -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#inicio" class="flex items-center gap-3 group">
-                <div class="bg-emerald-600 text-white h-12 w-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition">
-                    ♿
-                </div>
-                <div>
-                    <span class="text-xl font-extrabold tracking-tight text-slate-900">Acesso<span class="text-emerald-600">+</span></span>
-                    <p class="text-[10px] text-slate-500 font-medium tracking-wider uppercase">Autonomia & Inclusão</p>
-                </div>
-            </a>
+    <!-- HEADER / MENU SUPERIOR -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('home')">
+                <div class="bg-emerald-600 text-white h-10 w-10 rounded-xl flex items-center justify-center font-black text-lg">♿</div>
+                <span class="text-lg font-black tracking-tight">Acesso<span class="text-emerald-600">+</span></span>
+            </div>
 
-            <!-- Menu Desktop -->
-            <nav class="hidden lg:flex items-center gap-6 font-medium text-sm text-slate-600">
-                <a href="#inicio" class="hover:text-emerald-600 transition">Início</a>
-                <a href="#problema" class="hover:text-emerald-600 transition">O Problema</a>
-                <a href="#como-funciona" class="hover:text-emerald-600 transition">Como funciona</a>
-                <a href="#mapa" class="hover:text-emerald-600 transition">Mapa</a>
-                <a href="#filtros" class="hover:text-emerald-600 transition">Explorar</a>
-                <a href="#compra-assistida" class="hover:text-emerald-600 transition">Compra Assistida</a>
-                <a href="#estabelecimentos" class="hover:text-emerald-600 transition">Para Empresas</a>
-                <a href="#avaliacoes" class="hover:text-emerald-600 transition">Avaliações</a>
+            <!-- Abas Desktop -->
+            <nav class="hidden md:flex items-center gap-6 font-semibold text-sm text-slate-600">
+                <button onclick="switchTab('home')" class="nav-btn text-emerald-600 transition" data-tab="home">Início</button>
+                <button onclick="switchTab('explore')" class="nav-btn hover:text-emerald-600 transition" data-tab="explore">Explorar & Mapa</button>
+                <button onclick="switchTab('assistida')" class="nav-btn hover:text-emerald-600 transition" data-tab="assistida">Compra Assistida</button>
+                <button onclick="switchTab('avaliacoes')" class="nav-btn hover:text-emerald-600 transition" data-tab="avaliacoes">Avaliações</button>
+                <button onclick="switchTab('empresas')" class="nav-btn hover:text-emerald-600 transition" data-tab="empresas">Para Empresas</button>
             </nav>
 
-            <a href="#filtros" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition text-sm flex items-center gap-2">
-                Encontrar lugares
-            </a>
+            <button onclick="switchTab('explore')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow transition">
+                Encontrar Lugares
+            </button>
         </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 py-12">
+    <!-- CONTEÚDO DAS ABAS -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
 
-        <!-- 1. HERO SECTION -->
-        <section id="inicio" class="grid lg:grid-cols-2 gap-12 items-center pt-6">
-            <div class="space-y-6">
-                <div class="inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 text-xs font-bold px-3.5 py-1.5 rounded-full uppercase tracking-wider">
-                    <i class="fa-solid fa-circle-check"></i> Plataforma Digital de Acessibilidade
-                </div>
-                <h1 class="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-tight">
-                    Acessibilidade que você consegue encontrar <span class="text-emerald-600">antes de chegar.</span>
-                </h1>
-                <p class="text-lg text-slate-600 font-normal">
-                    “Descubra quais recursos de acessibilidade um estabelecimento oferece antes de sair de casa.”
-                </p>
-                
-                <!-- Caixa de Pesquisa no Hero -->
-                <div class="bg-white p-4 rounded-2xl shadow-xl border border-slate-200 space-y-3">
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" id="mainSearchInput" placeholder="🔎 O que você procura? Ex: Supermercado acessível..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 font-medium text-slate-800">
-                    </div>
-                    <div class="text-xs text-slate-500 flex flex-wrap gap-2 pt-1">
-                        <span class="font-semibold text-slate-700">Sugestões:</span>
-                        <button onclick="setSearch('Supermercado')" class="hover:text-emerald-600 underline">Supermercado</button> •
-                        <button onclick="setSearch('Banheiro')" class="hover:text-emerald-600 underline">Banheiro acessível</button> •
-                        <button onclick="setSearch('Libras')" class="hover:text-emerald-600 underline">Atendimento em Libras</button>
-                    </div>
-                    <div class="flex flex-wrap gap-3 pt-2">
-                        <button onclick="triggerWowEffect()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl shadow transition text-center">
-                            Explorar locais
+        <!-- ABA 1: INÍCIO -->
+        <section id="tab-home" class="tab-content space-y-12">
+            <div class="grid md:grid-cols-2 gap-8 items-center pt-4">
+                <div class="space-y-6">
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase">Autonomia & Inclusão</span>
+                    <h1 class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+                        Acessibilidade que você encontra <span class="text-emerald-600">antes de chegar.</span>
+                    </h1>
+                    <p class="text-slate-600 text-lg">“Descubra quais recursos de acessibilidade um estabelecimento oferece antes de sair de casa.”</p>
+                    <div class="flex gap-3">
+                        <button onclick="switchTab('explore')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3.5 rounded-xl shadow transition">
+                            Explorar Locais Agora
                         </button>
-                        <a href="#mapa" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition text-center">
-                            Ver mapa
-                        </a>
+                        <button onclick="switchTab('assistida')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-6 py-3.5 rounded-xl transition">
+                            Compra Assistida
+                        </button>
                     </div>
                 </div>
-
-                <!-- Elemento UAU (Oculto inicialmente) -->
-                <div id="wowElement" class="hidden bg-emerald-50 border-2 border-emerald-500 p-5 rounded-2xl shadow-lg transition-all animate-fade-in">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <span class="bg-emerald-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase">🎯 Efeito UAU — Match Perfeito</span>
-                            <h4 class="font-bold text-slate-900 text-lg mt-1">🛒 Mercado Central</h4>
-                            <p class="text-sm text-slate-600">92% dos recursos selecionados disponíveis para sua visita com autonomia total.</p>
-                        </div>
-                        <a href="#perfil-detalhado" class="text-emerald-700 font-bold text-sm hover:underline shrink-0">Ver detalhes →</a>
-                    </div>
+                <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl space-y-4">
+                    <div class="text-xs text-slate-400 font-bold uppercase">Conceito Principal</div>
+                    <p class="text-xl font-bold text-emerald-400 italic">“Não basta ter acesso ao lugar. É preciso ter condições de participar dele.”</p>
+                    <p class="text-xs text-slate-300">O Acesso+ transforma dados de acessibilidade em informação clara para garantir dignidade e segurança em cada visita.</p>
                 </div>
             </div>
 
-            <!-- Representação Visual do Aplicativo em um Celular -->
-            <div class="flex justify-center">
-                <div class="bg-slate-900 text-white p-6 rounded-[40px] shadow-2xl border-4 border-slate-800 w-full max-w-sm space-y-4 relative">
-                    <div class="w-32 h-4 bg-slate-800 rounded-full mx-auto mb-2"></div>
-                    <div class="bg-slate-800 p-4 rounded-2xl flex items-center justify-between">
-                        <div>
-                            <p class="text-xs text-slate-400">Localização Atual</p>
-                            <p class="font-bold text-sm text-emerald-400">📍 Várzea Branca, PI</p>
-                        </div>
-                        <span class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded-lg font-bold">GPS Ativo</span>
-                    </div>
-                    <div class="bg-slate-800/80 p-4 rounded-2xl space-y-2 border border-slate-700">
-                        <div class="flex justify-between text-xs text-slate-400">
-                            <span>Estabelecimentos Próximos</span>
-                            <span>6 locais</span>
-                        </div>
-                        <div class="p-3 bg-slate-700/60 rounded-xl flex items-center justify-between">
-                            <span class="font-semibold text-sm">🛒 Mercado Central</span>
-                            <span class="text-emerald-400 font-bold text-xs">🟢 92% Acessível</span>
-                        </div>
-                        <div class="p-3 bg-slate-700/60 rounded-xl flex items-center justify-between">
-                            <span class="font-semibold text-sm">🏥 Clínica Vida</span>
-                            <span class="text-amber-400 font-bold text-xs">🟡 70% Parcial</span>
-                        </div>
-                    </div>
-                    <div class="text-center pt-2">
-                        <p class="text-[11px] text-slate-400">«“Não basta ter acesso ao lugar. É preciso ter condições de participar dele.”»</p>
-                    </div>
+            <!-- Como Funciona Resumido -->
+            <div class="grid md:grid-cols-3 gap-6 pt-6">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2">
+                    <span class="text-2xl font-black text-emerald-600">01</span>
+                    <h3 class="font-bold text-lg">Pesquise</h3>
+                    <p class="text-sm text-slate-600">Encontre o estabelecimento desejado no mapa ou na busca.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2">
+                    <span class="text-2xl font-black text-emerald-600">02</span>
+                    <h3 class="font-bold text-lg">Confira</h3>
+                    <p class="text-sm text-slate-600">Veja rampas, banheiros, elevadores e suporte especializado.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2">
+                    <span class="text-2xl font-black text-emerald-600">03</span>
+                    <h3 class="font-bold text-lg">Planeje</h3>
+                    <p class="text-sm text-slate-600">Saiba o que esperar e solicite atendimento antecipado.</p>
                 </div>
             </div>
         </section>
 
-        <!-- 2. SEÇÃO "POR QUE O ACESSO+ EXISTE?" -->
-        <section id="problema" class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">O Desafio Real</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">O problema não é apenas chegar.</h2>
-                <p class="text-slate-600">“Muitas pessoas podem encontrar dificuldades para descobrir se determinado local realmente possui as condições necessárias para sua visita.”</p>
+        <!-- ABA 2: EXPLORAR & MAPA -->
+        <section id="tab-explore" class="tab-content hidden space-y-8">
+            <div class="space-y-3">
+                <h2 class="text-2xl sm:text-3xl font-black">Explorar Estabelecimentos & Mapa</h2>
+                <p class="text-sm text-slate-600">Filtre por suas necessidades e encontre locais compatíveis.</p>
             </div>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">♿</span> Existe rampa?
-                </div>
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">🚻</span> O banheiro é acessível?
-                </div>
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">🗄️</span> Há elevador?
-                </div>
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">🚪</span> Entrada adequada p/ cadeiras?
-                </div>
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">👁️</span> Recursos deficiência visual?
-                </div>
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">🦻</span> Atendimento em Libras?
-                </div>
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">🧑‍💼</span> Funcionário de apoio?
-                </div>
-                <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-medium text-slate-700 flex items-center gap-3">
-                    <span class="text-emerald-600 text-lg">🧩</span> Atendimento adaptado?
+            <!-- Barra de Busca e Filtros Rápidos -->
+            <div class="bg-white p-4 rounded-2xl border shadow-sm space-y-4">
+                <input type="text" placeholder="🔎 Buscar por nome, ex: Mercado Central..." class="w-full p-3 bg-slate-50 border rounded-xl text-sm focus:outline-none focus:border-emerald-500">
+                <div class="flex flex-wrap gap-2 text-xs font-semibold">
+                    <span class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg cursor-pointer">☑ Entrada acessível</span>
+                    <span class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg cursor-pointer">☑ Rampa</span>
+                    <span class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg cursor-pointer">☑ Banheiro acessível</span>
+                    <span class="px-3 py-1.5 bg-emerald-100 text-emerald-800 rounded-lg cursor-pointer">☑ Funcionário de apoio</span>
                 </div>
             </div>
 
-            <div class="bg-emerald-900 text-white p-6 rounded-2xl text-center shadow-md">
-                <p class="text-lg font-medium text-emerald-100">
-                    O desafio é conseguir utilizar o espaço com <strong class="text-emerald-400 font-bold">autonomia, segurança e dignidade</strong>.
-                </p>
-            </div>
-        </section>
-
-        <!-- 3. COMO FUNCIONA -->
-        <section id="como-funciona" class="space-y-8">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Processo Simples</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Como funciona</h2>
-                <p class="text-slate-600">Planeje sua saída em apenas três passos rápidos.</p>
-            </div>
-
+            <!-- Lista de Locais Demonstrativos -->
             <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
-                    <div class="text-4xl font-black text-emerald-600">01</div>
-                    <h3 class="text-xl font-bold text-slate-900">Pesquise</h3>
-                    <p class="text-slate-600 text-sm">Encontre estabelecimentos próximos ou procure por um local específico na barra de busca.</p>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded">🟢 92% Acessível</span>
+                    <h3 class="font-bold text-lg">🛒 Mercado Central</h3>
+                    <p class="text-xs text-slate-600">Rampas, elevadores, banheiro adaptado e funcionário de apoio.</p>
+                    <button onclick="alert('Visualizando perfil detalhado do Mercado Central.')" class="w-full bg-slate-100 hover:bg-slate-200 font-bold py-2 rounded-xl text-xs transition">Ver Detalhes</button>
                 </div>
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
-                    <div class="text-4xl font-black text-emerald-600">02</div>
-                    <h3 class="text-xl font-bold text-slate-900">Confira</h3>
-                    <p class="text-slate-600 text-sm">Veja com total transparência quais recursos de acessibilidade estão disponíveis e verificados.</p>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
+                    <span class="text-xs font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded">🟡 70% Parcial</span>
+                    <h3 class="font-bold text-lg">🏥 Clínica Vida</h3>
+                    <p class="text-xs text-slate-600">Rampas e banheiros, com pequenas restrições de piso tátil.</p>
+                    <button onclick="alert('Visualizando perfil detalhado da Clínica Vida.')" class="w-full bg-slate-100 hover:bg-slate-200 font-bold py-2 rounded-xl text-xs transition">Ver Detalhes</button>
                 </div>
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
-                    <div class="text-4xl font-black text-emerald-600">03</div>
-                    <h3 class="text-xl font-bold text-slate-900">Planeje</h3>
-                    <p class="text-slate-600 text-sm">Saiba o que encontrará antes de sair e, quando disponível, solicite atendimento antecipadamente.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. MAPA DE ACESSIBILIDADE -->
-        <section id="mapa" class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Geolocalização Urbana</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Encontre lugares mais acessíveis perto de você.</h2>
-                <p class="text-slate-600">Explore o mapa demonstrativo com marcadores de acessibilidade em tempo real.</p>
-            </div>
-
-            <!-- Mapa Fictício Interativo -->
-            <div class="bg-slate-900 text-white rounded-2xl p-6 sm:p-10 relative overflow-hidden min-h-[360px] flex flex-col justify-between border border-slate-800">
-                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:24px_24px]"></div>
-                
-                <div class="relative z-10 flex justify-between items-center flex-wrap gap-4">
-                    <div class="bg-slate-800/90 backdrop-blur px-4 py-2 rounded-xl border border-slate-700 text-xs font-semibold flex items-center gap-3">
-                        <span class="flex items-center gap-1 text-emerald-400"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span> Boa acessibilidade</span>
-                        <span class="flex items-center gap-1 text-amber-400"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block"></span> Parcial</span>
-                        <span class="flex items-center gap-1 text-rose-400"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span> Poucos recursos</span>
-                    </div>
-                    <span class="text-xs text-slate-400">🗺️ Mapa Demonstrativo Interativo (2026)</span>
-                </div>
-
-                <!-- Marcadores no Mapa -->
-                <div class="relative z-10 grid sm:grid-cols-3 gap-4 my-6">
-                    <button onclick="selectMapPlace('Mercado Central', 'Supermercado', '0.3 km', '92%', 'Entrada acessível, Elevador, Banheiro adaptado, Funcionário de apoio', '🟢 Boa acessibilidade')" class="bg-slate-800/90 hover:bg-slate-700 border border-emerald-500/50 p-4 rounded-2xl text-left transition space-y-1">
-                        <div class="flex justify-between items-center"><span class="font-bold text-sm">🛒 Mercado Central</span><span class="text-xs text-emerald-400 font-bold">🟢 92%</span></div>
-                        <p class="text-xs text-slate-400">Supermercado • 0.3 km</p>
-                    </button>
-                    <button onclick="selectMapPlace('Clínica Vida', 'Saúde', '0.8 km', '70%', 'Rampa segura, Banheiro acessível, Piso tátil parcial', '🟡 Acessibilidade parcial')" class="bg-slate-800/90 hover:bg-slate-700 border border-amber-500/50 p-4 rounded-2xl text-left transition space-y-1">
-                        <div class="flex justify-between items-center"><span class="font-bold text-sm">🏥 Clínica Vida</span><span class="text-xs text-amber-400 font-bold">🟡 70%</span></div>
-                        <p class="text-xs text-slate-400">Saúde • 0.8 km</p>
-                    </button>
-                    <button onclick="selectMapPlace('Restaurante Sabor', 'Alimentação', '1.2 km', '35%', 'Apenas entrada nivelada sem adaptações internas', '🔴 Poucos recursos')" class="bg-slate-800/90 hover:bg-slate-700 border border-rose-500/50 p-4 rounded-2xl text-left transition space-y-1">
-                        <div class="flex justify-between items-center"><span class="font-bold text-sm">🍽️ Restaurante Sabor</span><span class="text-xs text-rose-400 font-bold">🔴 35%</span></div>
-                        <p class="text-xs text-slate-400">Alimentação • 1.2 km</p>
-                    </button>
-                </div>
-
-                <!-- Card Dinâmico do Mapa -->
-                <div id="mapPlaceCard" class="relative z-10 bg-white text-slate-900 p-5 rounded-2xl shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <span id="mapCardBadge" class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded-md">🟢 Boa acessibilidade</span>
-                        <h4 id="mapCardTitle" class="text-lg font-bold mt-1">🛒 Mercado Central <span class="text-xs font-normal text-slate-500">(0.3 km)</span></h4>
-                        <p id="mapCardResources" class="text-xs text-slate-600 mt-0.5">Recursos: Entrada acessível, Elevador, Banheiro adaptado, Funcionário de apoio</p>
-                    </div>
-                    <a href="#perfil-detalhado" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-xl text-sm transition shrink-0">
-                        Ver acessibilidade
-                    </a>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
+                    <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded">🟢 88% Acessível</span>
+                    <h3 class="font-bold text-lg">🏛️ Centro Cultural</h3>
+                    <p class="text-xs text-slate-600">Totalmente adaptado com intérprete de Libras nos eventos.</p>
+                    <button onclick="alert('Visualizando perfil detalhado do Centro Cultural.')" class="w-full bg-slate-100 hover:bg-slate-200 font-bold py-2 rounded-xl text-xs transition">Ver Detalhes</button>
                 </div>
             </div>
         </section>
 
-        <!-- 5. PESQUISA E FILTROS -->
-        <section id="filtros" class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Busca Avançada</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Encontre exatamente o que você precisa.</h2>
-                <p class="text-slate-600">Acessibilidade não é igual para todas as pessoas. Selecione os filtros conforme suas necessidades específicas.</p>
-            </div>
-
-            <div class="space-y-6">
-                <!-- Campo de busca rápida interno -->
-                <div class="relative max-w-xl mx-auto">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" placeholder="🔎 Procurar estabelecimento..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 font-medium text-sm">
-                </div>
-
-                <!-- Grupos de Filtros -->
-                <div class="grid md:grid-cols-2 gap-6 pt-4">
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-wheelchair text-emerald-600"></i> Mobilidade</h4>
-                        <div class="grid grid-cols-2 gap-2 text-sm text-slate-700">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-600 w-4 h-4"> Entrada acessível</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-600 w-4 h-4"> Rampa</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Elevador</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-600 w-4 h-4"> Banheiro acessível</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Vaga acessível</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Espaço de circulação</label>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-eye text-emerald-600"></i> Deficiência Visual</h4>
-                        <div class="grid grid-cols-2 gap-2 text-sm text-slate-700">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Piso tátil</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Sinalização adequada</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="accent-emerald-600 w-4 h-4"> Atendimento de apoio</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Informações acessíveis</label>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-ear-listen text-emerald-600"></i> Deficiência Auditiva</h4>
-                        <div class="grid grid-cols-1 gap-2 text-sm text-slate-700">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Atendimento em Libras</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Recursos visuais</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Formas alternativas de comunicação</label>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-slate-900 flex items-center gap-2"><i class="fa-solid fa-brain text-emerald-600"></i> Neurodiversidade</h4>
-                        <div class="grid grid-cols-1 gap-2 text-sm text-slate-700">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Ambiente tranquilo</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Espaço de baixa estimulação</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accent-emerald-600 w-4 h-4"> Horários de menor movimento</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center pt-4">
-                    <button onclick="triggerWowEffect()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition">
-                        Mostrar resultados
-                    </button>
-                    <p class="text-xs text-slate-500 mt-2">💡 Dica: Acessibilidade varia conforme o perfil e a necessidade de cada indivíduo.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. PERFIL DO ESTABELECIMENTO -->
-        <section id="perfil-detalhado" class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-6">
-                <div>
-                    <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">🛒 Estabelecimento Demonstrativo</span>
-                    <h2 class="text-3xl font-black text-slate-900 mt-2">Mercado Central</h2>
-                    <p class="text-sm text-slate-500">Última verificação das informações: <strong class="text-slate-700">15/08/2026</strong> (🟢 Verificado)</p>
-                </div>
-                <div class="bg-emerald-50 border border-emerald-200 px-5 py-3 rounded-2xl text-center">
-                    <span class="text-xs text-emerald-700 font-bold block">Acessibilidade Geral</span>
-                    <span class="text-2xl font-black text-emerald-600">92%</span>
-                </div>
-            </div>
-
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Recursos Detalhados -->
-                <div class="lg:col-span-2 space-y-4">
-                    <h3 class="font-bold text-lg text-slate-900">Recursos de Infraestrutura</h3>
-                    <div class="grid sm:grid-cols-2 gap-3 text-sm">
-                        <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-                            <span>♿ Entrada acessível</span> <span class="font-bold text-emerald-600">🟢 Disponível</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-                            <span>🛗 Elevador</span> <span class="font-bold text-emerald-600">🟢 Disponível</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-                            <span>🚻 Banheiro acessível</span> <span class="font-bold text-emerald-600">🟢 Disponível</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-                            <span>🅿️ Vaga acessível</span> <span class="font-bold text-emerald-600">🟢 Disponível</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-                            <span>👁️ Apoio visual</span> <span class="font-bold text-emerald-600">🟢 Disponível</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center">
-                            <span>🦻 Atendimento em Libras</span> <span class="font-bold text-amber-600">🟡 Parcial (Sábados)</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 border rounded-xl flex justify-between items-center sm:col-span-2">
-                            <span>🧑‍💼 Funcionário de apoio</span> <span class="font-bold text-emerald-600">🟢 Disponível</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Informações Úteis -->
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4 text-sm">
-                    <h3 class="font-bold text-slate-900">Informações Úteis</h3>
-                    <div class="space-y-2 text-slate-600">
-                        <p><strong>Horário de funcionamento:</strong><br>Segunda a Sábado, das 08h às 20h</p>
-                        <p><strong>Horários de menor movimento:</strong><br>14h às 16h (Ideal para neurodiversidade)</p>
-                        <p><strong>Formas de comunicação:</strong><br>Balcão com atendimento preferencial e suporte via Acesso+</p>
-                        <p><strong>Observações:</strong><br>Rampa principal possui corrimão duplo e piso antiderrapante.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. GRANDE DIFERENCIAL — COMPRA ASSISTIDA -->
-        <section id="compra-assistida" class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-2xl space-y-8">
-            <div class="max-w-3xl space-y-4">
-                <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Grande Diferencial</span>
-                <h2 class="text-3xl sm:text-4xl font-black">Compra Assistida</h2>
-                <p class="text-slate-300 text-lg">
-                    “Algumas pessoas podem precisar de apoio para realizar suas compras. O Acesso+ permite identificar estabelecimentos que oferecem funcionários preparados para auxiliar seus clientes.”
-                </p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8 items-center bg-slate-800/80 p-6 sm:p-8 rounded-2xl border border-slate-700">
-                <div class="space-y-4">
-                    <h4 class="font-bold text-xl">🛒 Mercado Central</h4>
-                    <p class="text-sm text-slate-300">🧑‍💼 Funcionário de apoio disponível dedicado a auxiliar na circulação e seleção de produtos.</p>
-                    <div class="text-xs text-slate-400 space-y-1">
-                        <p>🕐 <strong>Horário do serviço:</strong> 8h às 17h</p>
-                        <p>📅 <strong>Dias:</strong> Segunda a sábado</p>
-                        <p>📞 <strong>Solicitação:</strong> Diretamente pelo Acesso+</p>
-                    </div>
-                </div>
-                <div class="text-center md:text-right">
-                    <button onclick="openAssistedModal()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-4 rounded-xl shadow-lg transition text-base">
-                        Solicitar atendimento
-                    </button>
-                    <p class="text-[11px] text-slate-400 mt-2">A disponibilidade depende da confirmação do estabelecimento.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Modal de Solicitação de Compra Assistida -->
-        <div id="assistedModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-            <div class="bg-white text-slate-900 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-6">
-                <div class="flex justify-between items-center border-b pb-4">
-                    <h3 class="text-xl font-bold">Solicitar Compra Assistida</h3>
-                    <button onclick="closeAssistedModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-xl"></i></button>
-                </div>
-                <div class="space-y-4 text-sm">
-                    <div>
-                        <label class="block font-semibold mb-1">Nome completo</label>
-                        <input type="text" placeholder="Seu nome" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block font-semibold mb-1">Data da visita</label>
-                            <input type="date" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-1">Horário aproximado</label>
-                            <input type="time" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Tipo de apoio necessário</label>
-                        <select class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                            <option>Apoio na circulação e escolha de produtos</option>
-                            <option>Apoio para deficiência visual</option>
-                            <option>Atendimento prioritário / Libras</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-1">Observações adicionais</label>
-                        <textarea placeholder="Detalhes para o funcionário de apoio..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl h-20"></textarea>
-                    </div>
-                </div>
-                <div class="flex gap-4 pt-2">
-                    <button onclick="submitAssistedRequest()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow transition">
-                        Enviar solicitação
-                    </button>
-                    <button onclick="closeAssistedModal()" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 font-bold rounded-xl transition">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 8. AVALIAÇÃO COLABORATIVA -->
-        <section id="avaliacoes" class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Comunidade Ativa</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Sua experiência também ajuda outras pessoas.</h2>
-                <p class="text-slate-600">Avalie os estabelecimentos visitados e ajude a manter dados confiáveis.</p>
-            </div>
-
-            <div class="grid lg:grid-cols-2 gap-8">
-                <!-- Formulário de Avaliação -->
-                <div class="bg-slate-50 p-6 sm:p-8 rounded-2xl border border-slate-200 space-y-4">
-                    <h3 class="font-bold text-lg text-slate-900">Avaliar: Mercado Central</h3>
-                    <div class="space-y-3 text-sm">
-                        <div class="flex justify-between items-center">
-                            <span>Acessibilidade geral:</span>
-                            <span class="text-amber-400 text-lg">⭐⭐⭐⭐⭐</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Atendimento:</span>
-                            <span class="text-amber-400 text-lg">⭐⭐⭐⭐⭐</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Estrutura:</span>
-                            <span class="text-amber-400 text-lg">⭐⭐⭐⭐☆</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span>Banheiro:</span>
-                            <span class="text-amber-400 text-lg">⭐⭐⭐⭐⭐</span>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-sm mb-1">Conte como foi sua experiência</label>
-                        <textarea placeholder="Detalhes sobre a visita, rampas, funcionários..." class="w-full p-3 bg-white border border-slate-200 rounded-xl h-24 text-sm"></textarea>
-                    </div>
-                    <button onclick="alert('Avaliação enviada com sucesso! Ela passará pela moderação comunitária antes de ser publicada.')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition">
-                        Avaliar estabelecimento
-                    </button>
-                    <p class="text-[11px] text-slate-500 text-center">🛡️ Sistema com moderação ativa para evitar conteúdos impróprios.</p>
-                </div>
-
-                <!-- Avaliações Recentes -->
-                <div class="space-y-4">
-                    <h3 class="font-bold text-lg text-slate-900">Avaliações Recentes da Comunidade</h3>
-                    <div class="space-y-3">
-                        <div class="p-4 bg-slate-50 border rounded-2xl space-y-1">
-                            <div class="flex justify-between items-center text-xs text-slate-500">
-                                <span class="font-bold text-slate-800">Maria Silva</span>
-                                <span>Há 2 dias</span>
-                            </div>
-                            <p class="text-amber-400 text-xs">⭐⭐⭐⭐⭐</p>
-                            <p class="text-sm text-slate-700">“O funcionário de apoio me ajudou muito na compra. A rampa é bem inclinada e segura.”</p>
-                        </div>
-                        <div class="p-4 bg-slate-50 border rounded-2xl space-y-1">
-                            <div class="flex justify-between items-center text-xs text-slate-500">
-                                <span class="font-bold text-slate-800">João Carlos</span>
-                                <span>Há 5 dias</span>
-                            </div>
-                            <p class="text-amber-400 text-xs">⭐⭐⭐⭐☆</p>
-                            <p class="text-sm text-slate-700">“Banheiro limpo e totalmente acessível. Fui muito bem atendido na entrada.”</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 9. PERFIL PARA ESTABELECIMENTOS -->
-        <section id="estabelecimentos" class="bg-gradient-to-r from-emerald-900 to-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl space-y-8">
-            <div class="max-w-2xl space-y-3">
-                <span class="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Para Empresas e Comércio</span>
-                <h2 class="text-3xl sm:text-4xl font-black">Seu estabelecimento é acessível? Mostre isso para quem precisa.</h2>
-                <p class="text-slate-300">“Estabelecimentos podem criar um perfil de acessibilidade e informar quais recursos realmente estão disponíveis.”</p>
-            </div>
-
-            <div class="grid sm:grid-cols-3 gap-6">
-                <div class="bg-white/10 backdrop-blur p-6 rounded-2xl border border-white/10 space-y-2">
-                    <i class="fa-solid fa-circle-check text-emerald-400 text-2xl"></i>
-                    <h4 class="font-bold">Informe seus recursos</h4>
-                    <p class="text-xs text-slate-300">Mostre rampas, banheiros e vagas com transparência total.</p>
-                </div>
-                <div class="bg-white/10 backdrop-blur p-6 rounded-2xl border border-white/10 space-y-2">
-                    <i class="fa-solid fa-hands-holding-child text-emerald-400 text-2xl"></i>
-                    <h4 class="font-bold">Compra Assistida</h4>
-                    <p class="text-xs text-slate-300">Cadastre funcionários de apoio e melhore o atendimento.</p>
-                </div>
-                <div class="bg-white/10 backdrop-blur p-6 rounded-2xl border border-white/10 space-y-2">
-                    <i class="fa-solid fa-chart-line text-emerald-400 text-2xl"></i>
-                    <h4 class="font-bold">Inclusão Real</h4>
-                    <p class="text-xs text-slate-300">Demonstre compromisso social e fidelize novos clientes.</p>
-                </div>
-            </div>
-
-            <div class="text-center pt-2">
-                <button onclick="alert('Redirecionando para o painel de cadastro de estabelecimentos (Módulo Administrativo em desenvolvimento).')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-3.5 rounded-xl shadow transition">
-                    Cadastrar estabelecimento
+        <!-- ABA 3: COMPRA ASSISTIDA -->
+        <section id="tab-assistida" class="tab-content hidden space-y-8">
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-8 rounded-3xl shadow-xl space-y-4">
+                <span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase">Grande Diferencial</span>
+                <h2 class="text-3xl font-black">Compra Assistida</h2>
+                <p class="text-slate-300 text-sm">Identifique estabelecimentos que oferecem funcionários preparados para auxiliar seus clientes durante as compras com total segurança e autonomia.</p>
+                <button onclick="alert('Solicitação aberta com sucesso!')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm transition">
+                    Solicitar Atendimento de Apoio
                 </button>
             </div>
         </section>
 
-        <!-- 10. VERIFICAÇÃO DAS INFORMAÇÕES -->
-        <section class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-6">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Confiabilidade</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Informação confiável é essencial.</h2>
-                <p class="text-slate-600">Para evitar que o usuário confie cegamente em dados antigos, o Acesso+ classifica a origem das informações com carimbos de tempo.</p>
-            </div>
-
-            <div class="grid sm:grid-cols-3 gap-4 pt-4">
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-2 text-center">
-                    <span class="text-xl">🟢</span>
-                    <h4 class="font-bold">Verificados</h4>
-                    <p class="text-xs text-slate-600">Checados por nossa equipe ou moderadores parceiros.</p>
+        <!-- ABA 4: AVALIAÇÕES -->
+        <section id="tab-avaliacoes" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl sm:text-3xl font-black">Avaliações da Comunidade</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
+                    <div class="flex justify-between text-xs text-slate-500">
+                        <span class="font-bold text-slate-800">Maria Silva</span>
+                        <span>Há 2 dias</span>
+                    </div>
+                    <p class="text-amber-400 text-sm">⭐⭐⭐⭐⭐</p>
+                    <p class="text-sm text-slate-700">“O funcionário de apoio me ajudou muito no Mercado Central. Atendimento impecável.”</p>
                 </div>
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-2 text-center">
-                    <span class="text-xl">🟡</span>
-                    <h4 class="font-bold">Informados pelo Estabelecimento</h4>
-                    <p class="text-xs text-slate-600">Cadastrados diretamente pelos responsáveis do local.</p>
-                </div>
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-2 text-center">
-                    <span class="text-xl">🔵</span>
-                    <h4 class="font-bold">Relatados pela Comunidade</h4>
-                    <p class="text-xs text-slate-600">Compartilhados por clientes após suas visitas.</p>
-                </div>
-            </div>
-
-            <div class="bg-slate-100 p-4 rounded-2xl text-center text-xs text-slate-600">
-                🕒 <strong>Última verificação geral do sistema:</strong> 15/08/2026
-            </div>
-        </section>
-
-        <!-- 11. IMPACTO SOCIAL -->
-        <section class="space-y-8">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Transformação Social</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Impacto Social</h2>
-                <p class="text-slate-600">“A informação também pode ser uma forma de acessibilidade.”</p>
-            </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-center">
-                    <div class="text-3xl">♿</div>
-                    <h4 class="font-bold text-slate-900">Mais autonomia</h4>
-                    <p class="text-xs text-slate-600">A pessoa consegue planejar sua visita sem surpresas desagradáveis.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-center">
-                    <div class="text-3xl">🤝</div>
-                    <h4 class="font-bold text-slate-900">Mais inclusão</h4>
-                    <p class="text-xs text-slate-600">Mais pessoas podem participar plenamente de espaços e serviços.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-center">
-                    <div class="text-3xl">🛡️</div>
-                    <h4 class="font-bold text-slate-900">Mais segurança</h4>
-                    <p class="text-xs text-slate-600">O usuário sabe previamente quais recursos estão disponíveis.</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-center">
-                    <div class="text-3xl">🌎</div>
-                    <h4 class="font-bold text-slate-900">Mais conscientização</h4>
-                    <p class="text-xs text-slate-600">Estabelecimentos conseguem identificar necessidades reais de melhoria.</p>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-3">
+                    <div class="flex justify-between text-xs text-slate-500">
+                        <span class="font-bold text-slate-800">João Carlos</span>
+                        <span>Há 5 dias</span>
+                    </div>
+                    <p class="text-amber-400 text-sm">⭐⭐⭐⭐☆</p>
+                    <p class="text-sm text-slate-700">“Banheiro limpo e totalmente acessível na Clínica Vida.”</p>
                 </div>
             </div>
         </section>
 
-        <!-- 16. DADOS DEMONSTRATIVOS (Lista dos Estabelecimentos) -->
-        <section id="estabelecimentos-demo" class="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-sm space-y-8">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-emerald-600 font-bold text-xs uppercase tracking-wider">Demonstração Prática</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Estabelecimentos de Demonstração</h2>
-                <p class="text-slate-600">Conheça exemplos variados cadastrados na primeira versão da plataforma.</p>
+        <!-- ABA 5: PARA EMPRESAS -->
+        <section id="tab-empresas" class="tab-content hidden space-y-6">
+            <div class="bg-emerald-900 text-white p-8 rounded-3xl space-y-4">
+                <h2 class="text-3xl font-black">Seu estabelecimento é acessível?</h2>
+                <p class="text-emerald-100 text-sm">Cadastre seu perfil, informe seus recursos e demonstre compromisso real com a inclusão.</p>
+                <button onclick="alert('Redirecionando para cadastro de empresas.')" class="bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm transition">
+                    Cadastrar Estabelecimento
+                </button>
             </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-3">
-                    <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded">🟢 Boa acessibilidade (92%)</span>
-                    <h4 class="font-bold text-lg">🛒 Mercado Central</h4>
-                    <p class="text-xs text-slate-600">Rampas, elevadores, banheiro adaptado e funcionário de apoio.</p>
-                </div>
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-3">
-                    <span class="text-xs font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded">🟡 Acessibilidade parcial (70%)</span>
-                    <h4 class="font-bold text-lg">🏥 Clínica Vida</h4>
-                    <p class="text-xs text-slate-600">Rampas e banheiros, com pequenas restrições de piso tátil.</p>
-                </div>
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-3">
-                    <span class="text-xs font-bold text-rose-600 bg-rose-100 px-2.5 py-1 rounded">🔴 Poucos recursos (35%)</span>
-                    <h4 class="font-bold text-lg">🍽️ Restaurante Sabor</h4>
-                    <p class="text-xs text-slate-600">Entrada nivelada, porém sem banheiros adaptados.</p>
-                </div>
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-3">
-                    <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded">🟢 Boa acessibilidade (88%)</span>
-                    <h4 class="font-bold text-lg">🏛️ Centro Cultural</h4>
-                    <p class="text-xs text-slate-600">Totalmente adaptado com intérprete de Libras nos eventos.</p>
-                </div>
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-3">
-                    <span class="text-xs font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded">🟡 Acessibilidade parcial (65%)</span>
-                    <h4 class="font-bold text-lg">🎬 Cine Piauí</h4>
-                    <p class="text-xs text-slate-600">Lugares reservados para cadeirantes, sem elevador para cabine.</p>
-                </div>
-                <div class="p-6 bg-slate-50 border rounded-2xl space-y-3">
-                    <span class="text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded">🟢 Boa acessibilidade (95%)</span>
-                    <h4 class="font-bold text-lg">🏨 Hotel Central</h4>
-                    <p class="text-xs text-slate-600">Quartos adaptados, braile nos elevadores e apoio completo.</p>
-                </div>
-            </div>
-            <p class="text-[11px] text-slate-400 text-center">Nota: Dados demonstrativos para fins educacionais e de inovação tecnológica (2026).</p>
         </section>
 
     </main>
 
-    <!-- 18. RODAPÉ -->
-    <footer class="bg-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 border-t border-slate-800 mt-20">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 mb-8">
-            <div class="space-y-3">
-                <span class="text-xl font-extrabold tracking-tight">Acesso<span class="text-emerald-400">+</span></span>
-                <p class="text-slate-400 text-xs">“Onde acessibilidade vira informação, autonomia e inclusão.”</p>
-            </div>
-            <div class="space-y-2 text-sm text-slate-400">
-                <p class="font-bold text-white mb-2">Navegação</p>
-                <a href="#inicio" class="block hover:text-emerald-400 transition">Sobre o projeto</a>
-                <a href="#como-funciona" class="block hover:text-emerald-400 transition">Como funciona</a>
-                <a href="#mapa" class="block hover:text-emerald-400 transition">Mapa de acessibilidade</a>
-            </div>
-            <div class="space-y-2 text-sm text-slate-400">
-                <p class="font-bold text-white mb-2">Empresas & Suporte</p>
-                <a href="#estabelecimentos" class="block hover:text-emerald-400 transition">Para estabelecimentos</a>
-                <a href="#compra-assistida" class="block hover:text-emerald-400 transition">Compra Assistida</a>
-                <a href="#" class="block hover:text-emerald-400 transition">Contato</a>
-            </div>
-            <div class="space-y-2 text-sm text-slate-400">
-                <p class="font-bold text-white mb-2">Legal</p>
-                <a href="#" class="block hover:text-emerald-400 transition">Termos de uso</a>
-                <a href="#" class="block hover:text-emerald-400 transition">Privacidade</a>
-                <a href="#" class="block hover:text-emerald-400 transition">Acessibilidade do site</a>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto border-t border-slate-800 pt-8 text-center space-y-2">
-            <p class="text-emerald-400 font-medium italic">“Não basta ter acesso ao lugar. É preciso ter condições de participar dele.”</p>
-            <p class="text-slate-500 text-xs">© 2026 ACESSO+ Plataforma Digital de Acessibilidade. Todos os direitos reservados.</p>
-        </div>
-    </footer>
-
-    <!-- 14. EXPERIÊNCIA MOBILE — BARRA DE NAVEGAÇÃO INFERIOR -->
-    <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 z-40 flex justify-around py-3 text-xs font-bold text-slate-600 shadow-lg">
-        <a href="#inicio" class="flex flex-col items-center gap-1 hover:text-emerald-600">
+    <!-- BARRA DE NAVEGAÇÃO INFERIOR (MOBILE) -->
+    <nav class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 z-40 flex justify-around py-3 text-xs font-bold text-slate-600">
+        <button onclick="switchTab('home')" class="flex flex-col items-center gap-1 text-emerald-600" data-mobile-btn="home">
             <i class="fa-solid fa-house text-base"></i> Início
-        </a>
-        <a href="#mapa" class="flex flex-col items-center gap-1 hover:text-emerald-600">
-            <i class="fa-solid fa-map-location-dot text-base"></i> Mapa
-        </a>
-        <a href="#filtros" class="flex flex-col items-center gap-1 hover:text-emerald-600">
-            <i class="fa-solid fa-magnifying-glass text-base"></i> Buscar
-        </a>
-        <a href="#avaliacoes" class="flex flex-col items-center gap-1 hover:text-emerald-600">
+        </button>
+        <button onclick="switchTab('explore')" class="flex flex-col items-center gap-1 hover:text-emerald-600" data-mobile-btn="explore">
+            <i class="fa-solid fa-magnifying-glass text-base"></i> Explorar
+        </button>
+        <button onclick="switchTab('assistida')" class="flex flex-col items-center gap-1 hover:text-emerald-600" data-mobile-btn="assistida">
+            <i class="fa-solid fa-hands-holding-child text-base"></i> Apoio
+        </button>
+        <button onclick="switchTab('avaliacoes')" class="flex flex-col items-center gap-1 hover:text-emerald-600" data-mobile-btn="avaliacoes">
             <i class="fa-solid fa-star text-base"></i> Avaliações
-        </a>
-        <a href="#estabelecimentos" class="flex flex-col items-center gap-1 hover:text-emerald-600">
-            <i class="fa-solid fa-user text-base"></i> Perfil
-        </a>
+        </button>
+        <button onclick="switchTab('empresas')" class="flex flex-col items-center gap-1 hover:text-emerald-600" data-mobile-btn="empresas">
+            <i class="fa-solid fa-building text-base"></i> Empresas
+        </button>
     </nav>
 
-    <!-- JAVASCRIPT DE INTERATIVIDADE -->
+    <!-- SCRIPT DE ABAS INSTANTÂNEAS -->
     <script>
-        // Painel de Acessibilidade do Próprio Site
-        function toggleAccessibilityPanel() {
-            const panel = document.getElementById('accessibilityPanel');
-            panel.classList.toggle('hidden');
+        function switchTab(tabId) {
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // Mostrar a aba selecionada
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            // Atualizar destaque dos botões do menu desktop
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('text-emerald-600');
+                } else {
+                    btn.classList.remove('text-emerald-600');
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function toggleHighContrast() {
-            document.body.classList.toggle('high-contrast');
+        function toggleAccessPanel() {
+            document.getElementById('accessPanel').classList.toggle('hidden');
         }
 
-        let currentFontSize = 16;
-        function adjustFontSize(direction) {
-            currentFontSize += direction * 2;
-            if (currentFontSize < 12) currentFontSize = 12;
-            if (currentFontSize > 24) currentFontSize = 24;
-            document.documentElement.style.setProperty('--base-font-size', currentFontSize + 'px');
-        }
-
-        function toggleLetterSpacing() {
-            const current = document.documentElement.style.getPropertyValue('--base-letter-spacing');
-            if (current === '2px') {
-                document.documentElement.style.setProperty('--base-letter-spacing', 'normal');
-            } else {
-                document.documentElement.style.setProperty('--base-letter-spacing', '2px');
+        let currentSize = 16;
+        function adjustFont(delta) {
+            currentSize += delta * 2;
+            if(currentSize >= 12 && currentSize <= 22) {
+                document.documentElement.style.setProperty('--base-font-size', currentSize + 'px');
             }
-        }
-
-        function toggleReduceMotion() {
-            document.body.classList.toggle('reduce-motion');
-        }
-
-        function resetAccessibilitySettings() {
-            document.body.classList.remove('high-contrast', 'reduce-motion');
-            document.documentElement.style.setProperty('--base-font-size', '16px');
-            document.documentElement.style.setProperty('--base-letter-spacing', 'normal');
-            currentFontSize = 16;
-        }
-
-        // Sugestão de busca rápida no Hero
-        function setSearch(term) {
-            document.getElementById('mainSearchInput').value = term;
-            triggerWowEffect();
-        }
-
-        // Efeito UAU
-        function triggerWowEffect() {
-            const wow = document.getElementById('wowElement');
-            wow.classList.remove('hidden');
-            wow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        // Interatividade do Mapa Demonstrativo
-        function selectMapPlace(title, category, distance, score, resources, badgeText) {
-            document.getElementById('mapCardTitle').innerHTML = `🛒 ${title} <span class="text-xs font-normal text-slate-500">(${distance})</span>`;
-            document.getElementById('mapCardResources').innerText = `Recursos: ${resources}`;
-            const badge = document.getElementById('mapCardBadge');
-            badge.innerText = badgeText;
-            if(badgeText.includes('Boa')) {
-                badge.className = 'text-xs font-bold text-emerald-600 bg-emerald-100 px-2.5 py-1 rounded-md';
-            } else if(badgeText.includes('parcial')) {
-                badge.className = 'text-xs font-bold text-amber-600 bg-amber-100 px-2.5 py-1 rounded-md';
-            } else {
-                badge.className = 'text-xs font-bold text-rose-600 bg-rose-100 px-2.5 py-1 rounded-md';
-            }
-        }
-
-        // Modal de Compra Assistida
-        function openAssistedModal() {
-            document.getElementById('assistedModal').classList.remove('hidden');
-        }
-
-        function closeAssistedModal() {
-            document.getElementById('assistedModal').classList.add('hidden');
-        }
-
-        function submitAssistedRequest() {
-            alert('Solicitação de Compra Assistida enviada com sucesso! O estabelecimento entrará em contato para confirmar o atendimento.');
-            closeAssistedModal();
         }
     </script>
 </body>
