@@ -3,356 +3,784 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso+ | Onde acessibilidade vira informação, autonomia e inclusão</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome para ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>ACESSO+ — Onde acessibilidade vira informação, autonomia e inclusão</title>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        /* Ocultar barra de rolagem das abas mantendo o deslize suave */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        :root {
+            --primary: #0f172a;
+            --accent: #3b82f6;
+            --accent-light: #eff6ff;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --font-size-base: 16px;
+        }
+
+        .high-contrast {
+            --primary: #000000;
+            --accent: #ffff00;
+            --accent-light: #222222;
+            --success: #00ff00;
+            --warning: #ffff00;
+            --danger: #ff0000;
+            --bg-main: #000000;
+            --bg-card: #121212;
+            --text-main: #ffffff;
+            --text-muted: #e0e0e0;
+            --border: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            padding-bottom: 70px; /* Espaço para barra mobile */
+        }
+
+        /* Header */
+        header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5r em;
+        }
+
+        nav.desktop-nav {
+            display: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav.desktop-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        nav.desktop-nav a:hover {
+            color: var(--accent);
+        }
+
+        .btn {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        /* Botão Acessibilidade Fixo */
+        .accessibility-toggle {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: var(--primary);
+            color: #ffffff;
+            border: 2px solid var(--accent);
+            border-radius: 50px;
+            padding: 0.75rem 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            z-index: 1001;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .accessibility-panel {
+            position: fixed;
+            bottom: 140px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 1002;
+            display: none;
+            width: 280px;
+        }
+
+        .accessibility-panel h3 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .accessibility-panel button {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            background: var(--bg-main);
+            color: var(--text-main);
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 3rem 5%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: center;
+            background: linear-gradient(135deg, var(--accent-light), var(--bg-main));
+        }
+
+        .hero-content h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .hero-content p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .search-box input {
+            padding: 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-main);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .search-suggestions {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .hero-mockup {
+            display: none;
+            background: var(--primary);
+            border-radius: 24px;
+            padding: 1.5rem;
+            color: #fff;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        /* Containers e Seções */
+        section {
+            padding: 4rem 5%;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Grid de Problemas / Perguntas */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .problem-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Como Funciona (3 Etapas) */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .step-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* Mapa demonstrativo */
+        .map-container {
+            background: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .map-markers {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .marker-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .marker-green { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .marker-yellow { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .marker-red { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        /* Filtros Avançados */
+        .filters-container {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group h4 {
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        /* Perfil de Estabelecimento Exemplo */
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+        }
+
+        .resource-list {
+            list-style: none;
+            margin: 1.5rem 0;
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .resource-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--bg-main);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* Compra Assistida */
+        .assisted-section {
+            background: linear-gradient(135deg, var(--primary), #1e293b);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .assisted-section h2, .assisted-section p {
+            color: #ffffff;
+        }
+
+        .assisted-section .btn {
+            background: var(--success);
+            color: #000;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-main);
+            color: var(--text-main);
+        }
+
+        /* Barra de Navegação Mobile Inferior */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.75rem 0;
+            z-index: 1000;
+        }
+
+        .mobile-nav-item {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            font-weight: 600;
+        }
+
+        .mobile-nav-item.active, .mobile-nav-item:hover {
+            color: var(--accent);
+        }
+
+        /* Elemento UAU / Alerta de Sucesso */
+        .wow-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--success);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 3rem 5%;
+            text-align: center;
+            margin-bottom: 60px; /* Acima da barra mobile */
+        }
+
+        footer p {
+            color: #94a3b8;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Media Queries para Responsividade */
+        @media(min-width: 768px) {
+            .desktop-nav { display: flex; }
+            .mobile-nav { display: none; }
+            .hero { grid-template-columns: 1fr 1fr; }
+            .hero-mockup { display: block; }
+            .steps-grid { grid-template-columns: repeat(3, 1fr); }
+            body { padding-bottom: 0; }
+            .accessibility-toggle { bottom: 20px; }
+            .accessibility-panel { bottom: 80px; }
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white min-h-screen flex flex-col justify-between">
+<body>
 
-    <!-- HEADER / NAVEGAÇÃO COM ABAS LADO A LADO -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between gap-4">
-            
-            <!-- Logo Redonda e Maior -->
-            <a href="#" onclick="switchTab('inicio')" class="flex items-center gap-3 shrink-0 group">
-                <div class="relative">
-                    <img src="logo-acesso-mais.png" alt="Acesso+ Logo" class="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-4 border-emerald-500 shadow-md transition-transform group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/ffffff?text=A+'">
-                    <span class="absolute bottom-0 right-0 bg-emerald-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow">PRO</span>
-                </div>
-                <div class="hidden sm:block">
-                    <span class="text-xl font-extrabold tracking-tight text-slate-900">Acesso<span class="text-emerald-600">+</span></span>
-                    <p class="text-xs text-slate-500">Autonomia & Inclusão</p>
-                </div>
-            </a>
-
-            <!-- Abas de Navegação (Uma do lado da outra, com rolagem horizontal se necessário) -->
-            <nav class="flex items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar py-2 shrink">
-                <button onclick="switchTab('inicio')" id="tab-inicio" class="tab-btn whitespace-nowrap px-4 py-2 rounded-xl text-sm font-semibold bg-emerald-600 text-white shadow-md transition-all duration-200 flex items-center gap-2">
-                    <i class="fa-solid fa-house"><span>Início</span></i>
-                </button>
-                <button onclick="switchTab('problema')" id="tab-problema" class="tab-btn whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-emerald-600 transition-all duration-200 flex items-center gap-2">
-                    <i class="fa-solid fa-circle-question"><span>O Problema</span></i>
-                </button>
-                <button onclick="switchTab('solucao')" id="tab-solucao" class="tab-btn whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-emerald-600 transition-all duration-200 flex items-center gap-2">
-                    <i class="fa-solid fa-lightbulb"><span>A Solução</span></i>
-                </button>
-                <button onclick="switchTab('compra-assistida')" id="tab-compra-assistida" class="tab-btn whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-emerald-600 transition-all duration-200 flex items-center gap-2">
-                    <i class="fa-solid fa-hands-holding-child"><span>Compra Assistida</span></i>
-                </button>
-                <button onclick="switchTab('necessidades')" id="tab-necessidades" class="tab-btn whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-emerald-600 transition-all duration-200 flex items-center gap-2">
-                    <i class="fa-solid fa-universal-access"><span>Necessidades</span></i>
-                </button>
-                <button onclick="switchTab('mapa-filtros')" id="tab-mapa-filtros" class="tab-btn whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-emerald-600 transition-all duration-200 flex items-center gap-2">
-                    <i class="fa-solid fa-map-location-dot"><span>Mapa & Filtros</span></i>
-                </button>
-                <button onclick="switchTab('impacto')" id="tab-impacto" class="tab-btn whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-emerald-600 transition-all duration-200 flex items-center gap-2">
-                    <i class="fa-solid fa-earth-americas"><span>Impacto Social</span></i>
-                </button>
-            </nav>
-        </div>
+    <!-- Header Principal -->
+    <header>
+        <a href="#" class="logo">♿ Acesso+</a>
+        <nav class="desktop-nav">
+            <a href="#inicio">Início</a>
+            <a href="#mapa">Mapa</a>
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#filtros">Explorar</a>
+            <a href="#estabelecimentos">Para Empresas</a>
+        </nav>
+        <a href="#filtros" class="btn">Encontrar lugares</a>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL (Muda de acordo com a aba clicada) -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full flex-grow">
+    <!-- Botão de Acessibilidade Flutuante -->
+    <button class="accessibility-toggle" onclick="toggleAccessibilityPanel()" aria-label="Abrir menu de acessibilidade do site">
+        ♿ Acessibilidade
+    </button>
 
-        <!-- ABA 1: INÍCIO -->
-        <div id="panel-inicio" class="tab-content space-y-12 animate-fadeIn">
-            <div class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white rounded-3xl p-8 sm:p-16 shadow-2xl">
-                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]"></div>
-                <div class="max-w-3xl relative z-10 space-y-6">
-                    <span class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold px-4 py-1.5 rounded-full uppercase tracking-wider">
-                        <i class="fa-solid fa-circle-check"></i> Inclusão Inteligente & Autonomia
-                    </span>
-                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-                        Acesso<span class="text-emerald-400">+</span>
-                    </h1>
-                    <p class="text-lg sm:text-2xl text-slate-300 font-light">
-                        Onde acessibilidade vira informação, autonomia e inclusão.
-                    </p>
-                    <div class="bg-slate-800/80 border border-slate-700/60 p-6 rounded-2xl shadow-xl">
-                        <p class="text-emerald-300 italic font-medium text-lg">
-                            “Não basta ter acesso ao lugar. É preciso ter condições de participar dele.”
-                        </p>
-                    </div>
-                    <div class="flex flex-wrap gap-4 pt-4">
-                        <button onclick="switchTab('solucao')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg transition flex items-center gap-2">
-                            Explorar Plataforma <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                        <button onclick="switchTab('compra-assistida')" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-semibold px-8 py-4 rounded-xl transition flex items-center gap-2">
-                            Conhecer Compra Assistida <i class="fa-solid fa-hands-holding-child"></i>
-                        </button>
-                    </div>
+    <!-- Painel de Acessibilidade do Próprio Site -->
+    <div class="accessibility-panel" id="accessibilityPanel">
+        <h3>Painel de Acessibilidade</h3>
+        <button onclick="toggleHighContrast()">🔲 Alto Contraste</button>
+        <button onclick="changeFontSize(1)">🔤 Aumentar Texto</button>
+        <button onclick="changeFontSize(-1)">🔡 Diminuir Texto</button>
+        <button onclick="resetAccessibility()">🔄 Restaurar Padrão</button>
+    </div>
+
+    <!-- 1. Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>Acessibilidade que você consegue encontrar antes de chegar.</h1>
+            <p>“Descubra quais recursos de acessibilidade um estabelecimento oferece antes de sair de casa.”</p>
+            <div class="search-box">
+                <input type="text" placeholder="🔎 O que você procura? Ex: Supermercado acessível..." id="searchInput">
+                <div class="search-suggestions">
+                    💡 <strong>Sugestões:</strong> Restaurante com banheiro acessível • Local com Libras • Funcionário de apoio
                 </div>
+                <button class="btn" onclick="triggerWowEffect()">Explorar locais</button>
+            </div>
+            
+            <!-- Elemento UAU (Disparado por interação) -->
+            <div class="wow-box" id="wowBox">
+                🎯 <strong>Encontramos uma opção perfeita para você!</strong><br>
+                <strong>Mercado Central</strong> — 92% dos recursos compatíveis com suas necessidades.<br>
+                <a href="#perfil" style="color: var(--success); font-weight: bold; display: inline-block; margin-top: 0.5rem;">Ver detalhes completos →</a>
             </div>
         </div>
+        <div class="hero-mockup">
+            <h3>📱 Acesso+ no seu Celular</h3>
+            <p style="margin-top: 1rem; color: #94a3b8; font-size: 0.9rem;">Interface intuitiva com geolocalização, rotas seguras e status verificado em tempo real.</p>
+        </div>
+    </section>
 
-        <!-- ABA 2: O PROBLEMA -->
-        <div id="panel-problema" class="tab-content hidden space-y-8 animate-fadeIn">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-emerald-600 font-semibold text-sm uppercase tracking-wider">01. O Desafio</span>
-                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Muitas barreiras antes mesmo de sair de casa</h2>
-                <p class="text-slate-600 mt-4 text-lg">Muitas pessoas com deficiência enfrentam imensa dificuldade para saber se determinado local possui as condições necessárias para sua visita.</p>
+    <!-- 2. Seção "Por que o Acesso+ existe?" -->
+    <section>
+        <h2 class="section-title">O problema não é apenas chegar.</h2>
+        <p class="section-subtitle">“Muitas pessoas podem encontrar dificuldades para descobrir se determinado local realmente possui as condições necessárias para sua visita.”</p>
+        <div class="problem-grid">
+            <div class="problem-card"><span>♿</span> Existe rampa?</div>
+            <div class="problem-card"><span>🚻</span> O banheiro é acessível?</div>
+            <div class="problem-card"><span>🗄️</span> Há elevador?</div>
+            <div class="problem-card"><span>🚪</span> A entrada é adequada?</div>
+            <div class="problem-card"><span>👁️</span> Recursos visuais/táteis?</div>
+            <div class="problem-card"><span>🦻</span> Atendimento em Libras?</div>
+            <div class="problem-card"><span>🧑‍💼</span> Funcionário de apoio?</div>
+            <div class="problem-card"><span>🧩</span> Ambiente neurodivergente?</div>
+        </div>
+        <p style="text-align: center; margin-top: 2rem; font-weight: 600; color: var(--accent);">
+            O desafio é conseguir utilizar o espaço com autonomia, segurança e dignidade.
+        </p>
+    </section>
+
+    <!-- 3. Como Funciona -->
+    <section id="como-funciona">
+        <h2 class="section-title">Como funciona em 3 passos</h2>
+        <p class="section-subtitle">Simples, rápido e pensado para o seu planejamento diário.</p>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">01</div>
+                <h3>Pesquise</h3>
+                <p>Encontre estabelecimentos próximos ou procure por um serviço específico.</p>
             </div>
-            <div class="grid md:grid-cols-2 gap-8 items-center bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-sm">
-                <div class="space-y-4">
-                    <h3 class="text-xl font-semibold text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-question text-emerald-600"></i> Perguntas frequentes sem respostas fáceis:
-                    </h3>
-                    <ul class="space-y-3 text-slate-600">
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> Existe rampa de acesso adequada?</li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> O banheiro é realmente acessível?</li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> Há elevador funcional?</li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> Existem recursos visuais ou auditivos?</li>
-                        <li class="flex items-start gap-3"><i class="fa-solid fa-check text-emerald-500 mt-1"></i> Há alguém preparado para oferecer auxílio?</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-900 text-white p-8 rounded-2xl shadow-inner space-y-4">
-                    <p class="text-slate-400 uppercase tracking-wider text-xs font-semibold">O Verdadeiro Objetivo</p>
-                    <p class="text-2xl font-light leading-relaxed">
-                        “O problema não é apenas chegar ao lugar. É conseguir utilizar o espaço com <strong class="text-emerald-400 font-semibold">autonomia, segurança e dignidade</strong>.”
-                    </p>
-                </div>
+            <div class="step-card">
+                <div class="step-number">02</div>
+                <h3>Confira</h3>
+                <p>Veja com transparência absoluta quais recursos estão disponíveis e verificados.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">03</div>
+                <h3>Planeje</h3>
+                <p>Saiba o que encontrará antes de sair e solicite suporte antecipado se necessário.</p>
             </div>
         </div>
+    </section>
 
-        <!-- ABA 3: A SOLUÇÃO -->
-        <div id="panel-solucao" class="tab-content hidden space-y-8 animate-fadeIn">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-emerald-600 font-semibold text-sm uppercase tracking-wider">02. A Solução</span>
-                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-2">O Acesso+ em Ação</h2>
-                <p class="text-slate-600 mt-4 text-lg">Pesquise estabelecimentos e visualize exatamente quais recursos de acessibilidade eles oferecem antes de sair.</p>
-            </div>
-            <div class="max-w-xl mx-auto bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
-                <div class="bg-emerald-600 text-white p-6 flex justify-between items-center">
-                    <div>
-                        <span class="text-xs bg-white/20 px-3 py-1 rounded-full uppercase tracking-wider font-semibold">Exemplo Prático</span>
-                        <h3 class="text-2xl font-bold mt-1">🛒 Supermercado X</h3>
-                    </div>
-                    <span class="bg-white text-emerald-700 font-bold px-3 py-1.5 rounded-xl text-sm shadow">⭐ 4.8</span>
-                </div>
-                <div class="p-6 space-y-3">
-                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                        <span class="flex items-center gap-2 text-slate-700"><i class="fa-solid fa-wheelchair text-emerald-600"></i> Entrada acessível</span>
-                        <span class="text-emerald-600 font-bold">✅</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                        <span class="flex items-center gap-2 text-slate-700"><i class="fa-solid fa-elevator text-emerald-600"></i> Elevador</span>
-                        <span class="text-emerald-600 font-bold">✅</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                        <span class="flex items-center gap-2 text-slate-700"><i class="fa-solid fa-restroom text-emerald-600"></i> Banheiro acessível</span>
-                        <span class="text-emerald-600 font-bold">✅</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                        <span class="flex items-center gap-2 text-slate-700"><i class="fa-solid fa-square-parking text-emerald-600"></i> Vaga acessível</span>
-                        <span class="text-emerald-600 font-bold">✅</span>
-                    </div>
-                    <div class="flex justify-between items-center py-2 border-b border-slate-100">
-                        <span class="flex items-center gap-2 text-slate-700"><i class="fa-solid fa-eye text-emerald-600"></i> Apoio deficiência visual</span>
-                        <span class="text-emerald-600 font-bold">✅</span>
-                    </div>
-                    <div class="flex justify-between items-center pt-2">
-                        <span class="flex items-center gap-2 text-slate-700 font-semibold"><i class="fa-solid fa-user-tie text-emerald-600"></i> Funcionário de apoio</span>
-                        <span class="text-emerald-600 font-bold">✅ Disponível</span>
-                    </div>
-                </div>
+    <!-- 4. Mapa de Acessibilidade -->
+    <section id="mapa">
+        <h2 class="section-title">Encontre lugares perto de você</h2>
+        <p class="section-subtitle">Demonstração interativa do mapa de acessibilidade urbana.</p>
+        <div class="map-container">
+            <p style="color: var(--text-muted);">🗺️ [Mapa Interativo Demonstrativo - Categoria Urbana]</p>
+            <div class="map-markers">
+                <span class="marker-badge marker-green" onclick="alert('Mercado Central: 🟢 Boa acessibilidade (92%)')">🛒 Mercado Central</span>
+                <span class="marker-badge marker-yellow" onclick="alert('Clínica Vida: 🟡 Acessibilidade parcial (70%)')">🏥 Clínica Vida</span>
+                <span class="marker-badge marker-red" onclick="alert('Restaurante Sabor: 🔴 Poucos recursos informados')">🍽️ Restaurante Sabor</span>
             </div>
         </div>
+    </section>
 
-        <!-- ABA 4: COMPRA ASSISTIDA -->
-        <div id="panel-compra-assistida" class="tab-content hidden space-y-8 animate-fadeIn">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Inovação em Destaque</span>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-slate-900">🛒 Compra Assistida</h2>
-                    <p class="text-slate-600 text-lg leading-relaxed">
-                        Para pessoas com dificuldade de mobilidade, deficiência visual ou outras condições que dificultem realizar compras sozinhas, o estabelecimento informa que possui um funcionário de apoio capacitado para auxiliar o cliente durante as compras.
-                    </p>
-                    <div class="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-xl">
-                        <p class="text-emerald-900 font-medium">
-                            “A pessoa pode solicitar o atendimento antes mesmo de chegar. Isso é muito mais interessante do que simplesmente colocar um ícone estático.”
-                        </p>
-                    </div>
+    <!-- 5. Pesquisa e Filtros -->
+    <section id="filtros">
+        <h2 class="section-title">Filtros por Necessidade</h2>
+        <p class="section-subtitle">Acessibilidade não é igual para todas as pessoas. Filtre pelo que importa para você.</p>
+        <div class="filters-container">
+            <div class="filter-group">
+                <h4>♿ Mobilidade Reduzida</h4>
+                <div class="checkbox-grid">
+                    <label class="checkbox-label"><input type="checkbox" checked> Entrada acessível</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> Rampa com inclinação segura</label>
+                    <label class="checkbox-label"><input type="checkbox"> Elevador adaptado</label>
+                    <label class="checkbox-label"><input type="checkbox" checked> Banheiro acessível</label>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-3xl p-8 shadow-xl space-y-6">
-                    <div class="flex items-center justify-between border-b pb-4">
-                        <h3 class="text-xl font-bold text-slate-900">Solicitação de Apoio</h3>
-                        <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Mercado X</span>
-                    </div>
-                    <div class="space-y-4 text-slate-700">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-user-check text-emerald-600 text-xl w-6"></i>
-                            <span><strong>Funcionário de apoio dedicado</strong> e capacitado</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-clock text-emerald-600 text-xl w-6"></i>
-                            <span><strong>Horário:</strong> 08h às 17h</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-calendar-days text-emerald-600 text-xl w-6"></i>
-                            <span><strong>Dias:</strong> Segunda a Sábado</span>
-                        </div>
-                    </div>
-                    <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3.5 rounded-xl transition shadow-md flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-phone-volume"></i> Solicitar pelo Acesso+
-                    </button>
+            </div>
+            <div class="filter-group">
+                <h4>👁️ Deficiência Visual</h4>
+                <div class="checkbox-grid">
+                    <label class="checkbox-label"><input type="checkbox"> Piso tátil</label>
+                    <label class="checkbox-label"><input type="checkbox"> Sinalização em Braille</label>
                 </div>
+            </div>
+            <div class="filter-group">
+                <h4>🦻 Deficiência Auditiva & Neurodiversidade</h4>
+                <div class="checkbox-grid">
+                    <label class="checkbox-label"><input type="checkbox"> Atendimento em Libras</label>
+                    <label class="checkbox-label"><input type="checkbox"> Ambiente de baixa estimulação</label>
+                </div>
+            </div>
+            <button class="btn" style="margin-top: 1rem;" onclick="triggerWowEffect()">Aplicar Filtros e Buscar</button>
+        </div>
+    </section>
+
+    <!-- 6. Perfil do Estabelecimento Exemplo -->
+    <section id="perfil">
+        <h2 class="section-title">Perfil do Estabelecimento</h2>
+        <p class="section-subtitle">Transparência total nos dados de infraestrutura.</p>
+        <div class="profile-card">
+            <h3>🛒 Mercado Central <span style="font-size: 0.9rem; color: var(--success); float: right;">Acessibilidade Geral: 92%</span></h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Última verificação comunitária: 15/08/2026 (🟢 Verificado)</p>
+            
+            <ul class="resource-list">
+                <li class="resource-item"><span>♿ Entrada acessível</span> <span>🟢 Disponível</span></li>
+                <li class="resource-item"><span>🗄️ Elevador com áudio</span> <span>🟢 Disponível</span></li>
+                <li class="resource-item"><span>🚻 Banheiro adaptado</span> <span>🟢 Disponível</span></li>
+                <li class="resource-item"><span>🅿️ Vaga reservada próxima</span> <span>🟢 Disponível</span></li>
+                <li class="resource-item"><span>🦻 Atendimento em Libras</span> <span>🟡 Parcial (Sábados)</span></li>
+                <li class="resource-item"><span>🧑‍💼 Funcionário de apoio</span> <span>🟢 Disponível</span></li>
+            </ul>
+            <p style="font-size: 0.9rem;"><strong>Horário de funcionamento:</strong> 08:00 às 20:00 (Horários de menor movimento: 14h às 16h)</p>
+        </div>
+    </section>
+
+    <!-- 7. Grande Diferencial — Compra Assistida -->
+    <section>
+        <div class="assisted-section">
+            <h2>Compra Assistida</h2>
+            <p style="max-width: 600px; margin: 1rem auto;">“Identifique estabelecimentos que oferecem funcionários preparados para auxiliar em suas compras com total segurança e respeito.”</p>
+            <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: #cbd5e1;">🧑‍💼 Mercado Central — Funcionário de apoio disponível (Seg. a Sáb, 8h às 17h)</p>
+            <button class="btn" onclick="openModal()">Solicitar Atendimento</button>
+        </div>
+    </section>
+
+    <!-- Modal de Compra Assistida -->
+    <div class="modal-overlay" id="assistedModal">
+        <div class="modal-content">
+            <h3>Solicitar Compra Assistida</h3>
+            <div class="form-group">
+                <label>Seu Nome</label>
+                <input type="text" placeholder="Nome completo">
+            </div>
+            <div class="form-group">
+                <label>Data da Visita</label>
+                <input type="date">
+            </div>
+            <div class="form-group">
+                <label>Tipo de Apoio Necessário</label>
+                <select>
+                    <option>Auxílio na circulação e escolha de produtos</option>
+                    <option>Apoio com deficiência visual</option>
+                    <option>Comunicação em Libras</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn" onclick="closeModal()">Enviar Solicitação</button>
+                <button class="btn btn-outline" onclick="closeModal()" style="border-color: var(--border); color: var(--text-main);">Cancelar</button>
             </div>
         </div>
+    </div>
 
-        <!-- ABA 5: NECESSIDADES -->
-        <div id="panel-necessidades" class="tab-content hidden space-y-8 animate-fadeIn">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-emerald-600 font-semibold text-sm uppercase tracking-wider">04. Abrangência</span>
-                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Atendendo Diferentes Necessidades</h2>
-                <p class="text-slate-600 mt-4 text-lg">Não devemos pensar somente em cadeira de rodas. A acessibilidade é múltipla.</p>
-            </div>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-                    <div class="text-emerald-600 text-2xl"><i class="fa-solid fa-wheelchair"></i></div>
-                    <h3 class="text-xl font-semibold text-slate-900">Mobilidade</h3>
-                    <p class="text-slate-600 text-sm">Rampas, elevadores, banheiros acessíveis, espaço amplo de circulação e vagas reservadas.</p>
-                </div>
-                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-                    <div class="text-emerald-600 text-2xl"><i class="fa-solid fa-eye"></i></div>
-                    <h3 class="text-xl font-semibold text-slate-900">Deficiência Visual</h3>
-                    <p class="text-slate-600 text-sm">Piso tátil, sinalização em braile/adequada, atendimento de apoio e informações em áudio.</p>
-                </div>
-                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-                    <div class="text-emerald-600 text-2xl"><i class="fa-solid fa-ear-listen"></i></div>
-                    <h3 class="text-xl font-semibold text-slate-900">Deficiência Auditiva</h3>
-                    <p class="text-slate-600 text-sm">Atendimento em Libras quando disponível, recursos visuais e clareza nas formas de comunicação.</p>
-                </div>
-                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-                    <div class="text-emerald-600 text-2xl"><i class="fa-solid fa-brain"></i></div>
-                    <h3 class="text-xl font-semibold text-slate-900">Neurodiversidade</h3>
-                    <p class="text-slate-600 text-sm">Ambiente mais tranquilo, espaços de baixa estimulação e relatórios de horários de menor movimento.</p>
-                </div>
-                <div class="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3 sm:col-span-2 lg:col-span-2">
-                    <div class="text-emerald-600 text-2xl"><i class="fa-solid fa-person-walking-with-cane"></i></div>
-                    <h3 class="text-xl font-semibold text-slate-900">Pessoas com Mobilidade Reduzida</h3>
-                    <p class="text-slate-600 text-sm">Idosos, gestantes ou pessoas em recuperação que se beneficiam enormemente de informações prévias e apoio estruturado.</p>
-                </div>
-            </div>
+    <!-- 8. Avaliação Colaborativa -->
+    <section>
+        <h2 class="section-title">Sua experiência ajuda outros</h2>
+        <p class="section-subtitle">Avalie infraestrutura, atendimento e banheiros após sua visita.</p>
+        <div style="max-width: 600px; margin: 0 auto; background: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--border);">
+            <h4>Avaliar: Mercado Central</h4>
+            <div style="margin: 1rem 0; font-size: 1.25rem;">⭐⭐⭐⭐⭐ (Excelente acessibilidade geral)</div>
+            <textarea placeholder="Conte como foi sua experiência..." style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-main); margin-bottom: 1rem; height: 100px;"></textarea>
+            <button class="btn" onclick="alert('Avaliação enviada com sucesso! Obrigado por colaborar com a comunidade.')">Enviar Avaliação</button>
         </div>
+    </section>
 
-        <!-- ABA 6: MAPA & FILTROS -->
-        <div id="panel-mapa-filtros" class="tab-content hidden space-y-8 animate-fadeIn">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-lg space-y-6">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-map-location-dot text-emerald-600"></i> Mapa de Acessibilidade
-                        </h3>
-                        <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Tempo Real</span>
-                    </div>
-                    <div class="bg-slate-100 rounded-2xl h-64 flex flex-col items-center justify-center border border-dashed border-slate-300 p-4 text-center space-y-3">
-                        <div class="flex gap-4 text-sm font-semibold">
-                            <span class="flex items-center gap-1.5 text-emerald-600"><i class="fa-solid fa-circle text-xs"></i> Boa Estrutura</span>
-                            <span class="flex items-center gap-1.5 text-amber-500"><i class="fa-solid fa-circle text-xs"></i> Parcial</span>
-                        </div>
-                        <p class="text-slate-500 text-sm max-w-xs">Clique no estabelecimento no mapa para ver todos os recursos disponíveis instantaneamente.</p>
-                    </div>
-                </div>
-                <div class="space-y-6">
-                    <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Busca Avançada</span>
-                    <h2 class="text-3xl font-bold text-slate-900">Encontre exatamente o que você precisa</h2>
-                    <p class="text-slate-600">Filtre estabelecimentos por suas necessidades específicas:</p>
-                    <div class="space-y-3 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" checked class="w-5 h-5 accent-emerald-600 rounded">
-                            <span class="text-slate-700 font-medium">Entrada acessível</span>
-                        </label>
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" checked class="w-5 h-5 accent-emerald-600 rounded">
-                            <span class="text-slate-700 font-medium">Banheiro adaptado</span>
-                        </label>
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" checked class="w-5 h-5 accent-emerald-600 rounded">
-                            <span class="text-slate-700 font-medium">Funcionário de apoio disponível</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ABA 7: IMPACTO SOCIAL -->
-        <div id="panel-impacto" class="tab-content hidden space-y-8 animate-fadeIn">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-emerald-600 font-semibold text-sm uppercase tracking-wider">07. Comunidade & Impacto</span>
-                <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-2">Avaliação Colaborativa e Impacto Social</h2>
-                <p class="text-slate-600 mt-4 text-lg">Os estabelecimentos criam perfis e a comunidade avalia a experiência real de visitação.</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-store text-emerald-600"></i> Participação dos Estabelecimentos
-                    </h3>
-                    <p class="text-slate-600 text-sm">Os locais informam seus recursos, horários e formas de comunicação. As informações passam por verificação para garantir confiabilidade.</p>
-                    <div class="bg-slate-50 p-4 rounded-xl border text-sm text-slate-700 space-y-2">
-                        <p>⭐ <strong>Avaliação Geral:</strong> 5.0 / 5.0</p>
-                        <p>💬 <em>"O funcionário de apoio nos atendeu perfeitamente na entrada, facilitando toda a compra."</em></p>
-                    </div>
-                </div>
-                <div class="bg-emerald-900 text-white p-8 rounded-3xl shadow-sm space-y-4">
-                    <h3 class="text-xl font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-earth-americas text-emerald-400"></i> Impacto Social do Acesso+
-                    </h3>
-                    <ul class="space-y-3 text-slate-200 text-sm">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>Mais autonomia:</strong> Planejamento prévio da visita.</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>Mais inclusão:</strong> Frequência em comércio e serviços.</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <strong>Mais segurança:</strong> Certeza prévia dos recursos disponíveis.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 text-white py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center mt-12">
-        <div class="max-w-4xl mx-auto space-y-4">
-            <p class="text-slate-400 text-sm">Onde acessibilidade vira informação, autonomia e inclusão.</p>
-            <p class="text-slate-600 text-xs">© 2026 Acesso+. Todos os direitos reservados.</p>
-        </div>
+    <!-- 18. Rodapé -->
+    <footer>
+        <h3>♿ Acesso+</h3>
+        <p>“Onde acessibilidade vira informação, autonomia e inclusão.”</p>
+        <p style="margin-top: 1.5rem; font-style: italic;">“Não basta ter acesso ao lugar. É preciso ter condições de participar dele.”</p>
+        <p style="margin-top: 2rem; font-size: 0.8rem;">© 2026 ACESSO+ Plataforma Digital de Acessibilidade. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- SCRIPT DE TROCA DE ABAS -->
+    <!-- Barra de Navegação Mobile Inferior -->
+    <div class="mobile-nav">
+        <a href="#inicio" class="mobile-nav-item active">🏠 <span>Início</span></a>
+        <a href="#mapa" class="mobile-nav-item">🗺️ <span>Mapa</span></a>
+        <a href="#filtros" class="mobile-nav-item">🔎 <span>Buscar</span></a>
+        <a href="#perfil" class="mobile-nav-item">⭐ <span>Perfil</span></a>
+        <a href="#estabelecimentos" class="mobile-nav-item">👤 <span>Conta</span></a>
+    </div>
+
+    <!-- JavaScript para Interatividade e Acessibilidade -->
     <script>
-        function switchTab(tabName) {
-            // Esconde todos os painéis de conteúdo
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.add('hidden'));
+        // Painel de Acessibilidade
+        function toggleAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
 
-            // Remove o estilo ativo de todos os botões de aba
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-md');
-                btn.classList.add('text-slate-600', 'hover:bg-slate-100', 'hover:text-emerald-600', 'font-medium');
-            });
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+        }
 
-            // Mostra o painel selecionado
-            const activePanel = document.getElementById('panel-' + tabName);
-            if (activePanel) {
-                activePanel.classList.remove('hidden');
-            }
+        let currentFontSize = 16;
+        function changeFontSize(direction) {
+            currentFontSize += direction * 2;
+            if (currentFontSize < 12) currentFontSize = 12;
+            if (currentFontSize > 24) currentFontSize = 24;
+            document.documentElement.style.setProperty('--font-size-base', currentFontSize + 'px');
+        }
 
-            // Destaca a aba ativa
-            const activeBtn = document.getElementById('tab-' + tabName);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100', 'hover:text-emerald-600', 'font-medium');
-                activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-md', 'font-semibold');
-            }
+        function resetAccessibility() {
+            document.body.classList.remove('high-contrast');
+            currentFontSize = 16;
+            document.documentElement.style.setProperty('--font-size-base', '16px');
+        }
+
+        // Modal de Compra Assistida
+        function openModal() {
+            document.getElementById('assistedModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('assistedModal').style.display = 'none';
+        }
+
+        // Efeito UAU
+        function triggerWowEffect() {
+            const wowBox = document.getElementById('wowBox');
+            wowBox.style.display = 'block';
+            wowBox.scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
